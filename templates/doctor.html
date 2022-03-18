@@ -1,0 +1,124 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>Doctor</title>
+{% endblock %}
+
+{% block title %}
+Select a Doctor page
+{% endblock %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-4"></div>
+        {% csrf_token %}
+        <div class="col-md-4">
+        <div class="layui-row layui-col-space15">
+            {% for doctor_profile in doctor_profiles %}
+                <div class="layui-col-md4">
+                    <div class="layui-panel doctor_panel" id="1" data-value="{{ doctor_profile.user.id }}">
+                        <img src="{{ doctor_profile.avatar.url }}" style="width: 100px;height: 100px"/>
+                        <div style="padding: 30px;">{{ doctor_profile.name }}</div>
+                        <div>
+                            {% for c in doctor_profile.rate_loop %}
+                                <i class="layui-icon layui-icon-rate-solid"></i>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="control-group text-right">
+            <button class="layui-btn" type="button" onclick="submit()">Next</button>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-4"></div>
+
+</div>
+    <style>
+        .doctor_panel {
+            width: 200px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layui-icon-rate-solid {
+            color: #FFB800;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+            return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    let currSelectedDocId = -1
+    const $ = layui.jquery;
+
+    // 单选逻辑
+    $('.layui-panel').on('click', function () {
+        let check = $(this).attr("check")
+        currSelectedDocId = this.getAttribute("data-value")
+        if (check==='y') {
+            $(this).attr({ "style": "background:#ffffff", "check": "n" });//改变当前tr颜色
+        } else {
+            let id = $(this).attr("id");
+            let all_panels = $('.layui-panel')
+            $(this).attr({ "style": "background:#4f958a", "check": "y" });//改变当前tr颜色
+            for(let i = 0;i<all_panels.length;i++){
+                const obj = all_panels.get(i)
+                if (obj.id !== id)
+                    $(obj).attr({ "style": "background:#ffffff", "check": "n" })
+            }
+        }
+    });
+
+    let submit = () => {
+        if (currSelectedDocId !== -1) {
+            axios.post('/doctor/', {
+                selectedDoc: currSelectedDocId,
+            },{
+                 headers: {'X-CSRFToken': csrftoken},
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    }
+
+</script>
+{% endblock %}

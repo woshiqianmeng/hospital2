@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>
+    Doctor home</title>
+
+{% endblock %}
+
+{% block title %}
+Doctor home
+{% endblock %}
+
+{% block content %}
+
+<script>
+
+    function func6() {
+        layer.alert('只想简单的提示');
+
+    }
+</script>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-panel">
+                    <a href="#" onclick="func6()">
+                        <div style="padding: 30px;">patient1</div>
+                    </a>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-panel">
+                    <a href="#">
+                        <div style="padding: 30px;">patient2</div>
+                    </a>
+                </div>
+            </div>
+            <div class="layui-col-md12 test" id='test'>
+                <div class="layui-panel">
+                    <a href="#">
+                        <div style="padding: 30px;">patient3</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+    layui.use('layer', function () {
+        var layer = layui.layer;
+
+        layer.msg('hello');
+    });
+</script>
+{% endblock %}

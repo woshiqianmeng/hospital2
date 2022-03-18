@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>Registered</title>
+
+{% endblock %}
+
+{% block title %}
+Registerd
+{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form class="layui-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="control-group">
+                <label class="control-label" for="account">Account</label>
+                <input class="form-control" id="account" name="account" type="text" />
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="name">Name</label>
+                <input class="form-control" id="name" name="name" type="text" />
+            </div>
+            <div class="control-group">
+                <input type="radio" name="sex" value="0" title="Male">
+                <input type="radio" name="sex" value="1" title="Female" checked>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">Password</label>
+                <input class="form-control" id="password" name="password" type="password"/>
+            </div>
+{#            <div class="control-group">#}
+{#                <label class="control-label" for="Registration">Registration type:</label>#}
+{#                <a href="/doctorHome"><button class="layui-btn layui-btn-radius" type="button">Doctor</button></a>#}
+{#                <a href="/patition"><button class="layui-btn layui-btn-radius" type="button">Patient</button></a>#}
+{#            </div>#}
+
+
+            <div class="control-group">
+                <label class="control-label" for="avatar">Avatar</label>
+                <input type="file" class="form-control-file" name="avatar" id="avatar">
+            </div>
+
+            <div class="control-group">
+                <input type="radio" name="role" value="0" title="Doctor">
+                <input type="radio" name="role" value="1" title="Patient" checked>
+            </div>
+
+            <div style="text-align: center;padding-top: 10px">
+                <input class="layui-btn layui-btn-radius" type="submit" value="OK">
+            </div>
+
+
+
+        </form>
+    </div>
+{#    <div class="col-md-4"></div>#}
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+</script>
+{% endblock js %}

@@ -1,0 +1,54 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>login</title>
+
+{% endblock %}
+
+{% block title %}
+Medical management system
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <!-- <h1 style="text-align: center;">User Login</h1> -->
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form class="layui-form" method="post" action="login/">
+            {% csrf_token %}
+            <div class="layui-form-item">
+                <label class="control-label" for="account">Account</label>
+                <input class="layui-input" id="account" name="account" type="text" required/>
+{#                <input type="radio" name="role" value="0" title="Administrator">#}
+{#                <input type="radio" name="role" value="1" title="Doctor" checked>#}
+{#                <input type="radio" name="role" value="2" title="Patient">#}
+            </div>
+            <div class="layui-form-item">
+                <label class="control-label" for="password">Password</label>
+                <input class="layui-input" id="password" name="password" type="password" required/>
+            </div>
+            <div class="layui-form-item">
+                <!-- <button class="btn" type="button">Registered</button>
+                <button class="btn" type="button" >Login</button> -->
+                <a href="/register"><button class="layui-btn layui-btn-radius" type="button">Registered</button></a>
+{#                <a href="/login"><button class="layui-btn layui-btn-radius" type="button">Login</button></a>#}
+                <input class="layui-btn layui-btn-radius" type="submit" value="Login" />
+            </div>
+        </form>
+    </div>
+
+    <a href="/patient_checkout" class="layui-btn layui-btn-radius">DEBUG</a>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+</script>
+{% endblock %}

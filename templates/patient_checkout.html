@@ -1,0 +1,107 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>Patient check out</title>
+
+{% endblock %}
+
+{% block title %}
+Patient check out
+{% endblock %}
+{% load static %}
+
+{% block content %}
+    <div class="layui-container">
+                <div class="layui-row layui-panel" style="display: flex">
+                    <div class="layui-col-md1 grid-cell">
+                    </div>
+                    <div class="layui-col-md4 grid-cell">
+                        <div>Medicine Name</div>
+                    </div>
+                    <div class="layui-col-md4 grid-cell"> Number </div>
+                    <div class="layui-col-md3 grid-cell">
+                        Select
+                    </div>
+                </div>
+            </div>
+    <form class="layui-form" method="post" action="patient_checkout">
+        {% csrf_token %}
+        {% for debug_datum in debug_data %}
+            <div class="layui-container">
+                <div class="layui-row layui-panel" style="display: flex">
+                    <div class="layui-col-md1">
+                      <img src="/media/debug/test.jpg" style="height: 100px">
+                    </div>
+                    <div class="layui-col-md4 grid-cell">
+                        <div>{{ debug_datum.medicine_name }}</div>
+                    </div>
+                    <div class="layui-col-md4 grid-cell"> {{ debug_datum.num }}</div>
+                    <div class="layui-col-md3 grid-cell">
+                        <li type="none">
+                            <input type="checkbox" name="check" lay-skin="primary" style="text-align: center" value={{ debug_datum.med_id }} checked>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="layui-row">
+            <div class="grid-cell" style="flex-direction: row">
+                <div>评分</div>
+                <div class="grid-cell" id="rate" style="zoom: 2"></div>
+            </div>
+
+        </div>
+
+        <input id="rate" type="number" name="rate" value=5 hidden>
+        <div class="layui-row grid-cell">
+            <input class="layui-btn layui-btn-radius" type="submit" value="Check Out" style="justify-content: center;align-items: center;width:fit-content"/>
+        </div>
+    </form>
+
+
+
+
+    <style>
+    .grid-cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        line-height: 30px;
+        text-align: center;
+        {#background-color: #79C48C;#}
+        font-size: 20px;
+        {#color: #fff;#}
+    }
+    .cell-bg {
+        background-color: #79C48C;
+    }
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        margin: auto;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var rate = layui.rate;
+
+        //渲染
+        var ins1 = rate.render({
+          elem: '#rate',
+          choose: function(value){
+            $("rate").value = value
+          }
+        });
+    });
+
+
+</script>
+{% endblock %}

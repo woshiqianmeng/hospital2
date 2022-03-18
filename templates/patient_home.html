@@ -1,0 +1,48 @@
+{% extends '_base.html' %}
+
+{% block header %}
+
+<title>
+    Patition home page</title>
+
+{% endblock %}
+
+{% block title %}
+Patition home page
+{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form class="layui-form">
+            {% csrf_token %}
+            <label class="control-label" for="">Choose your condition:</label>
+            <div class="layui-btn-container">
+                <input type="checkbox" name="1" title="eye">
+                <input type="checkbox" name="1" title="Fever">
+                <input type="checkbox" name="1" title="orthopedic">
+                <!-- <button type="button" class="layui-btn">eye</button> 
+                <button type="button" class="layui-btn">Fever</button> 
+                <button type="button" class="layui-btn">orthopedic</button>  -->
+            </div>
+            <div class="control-group text-right">
+                <a href="/doctor"><button class="layui-btn" type="button">Next</button></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+</script>
+{% endblock %}

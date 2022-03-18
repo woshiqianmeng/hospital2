@@ -1,0 +1,28 @@
+.nav {
+    background-color: #4f958a;
+    font-size: 30px;
+}
+.round {
+    border-radius: 98%;
+    overflow: hidden;
+    background-color: #4f958a;
+}
+.avator {
+    width: 20px;
+    height: 20px;
+}
+.mediacl{
+    width: 150px;
+    height: 150px;
+}
+.site-doc-icon li .layui-anim {
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    margin: 0 auto 10px;
+    text-align: center;
+    background-color: #009688;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 50%;
+}
