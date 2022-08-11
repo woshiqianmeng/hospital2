@@ -2,56 +2,86 @@
 
 {% block header %}
 
-<title>wait</title>
+    <title>wait</title>
 
 {% endblock %}
 
 {% block title %}
-Wait Doctor
+    Wait Doctor
 {% endblock %}
 {% load static %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <ul class="site-doc-icon site-doc-anim">
-            <li>
-                <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">wait</div>
-                <div style="text-align: center;">number of patients in line ahead: 2</div> 
-            </li>
-        </ul>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <ul class="site-doc-icon site-doc-anim">
+                <li>
+                    <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">wait</div>
+                    <label id="text" style="text-align: center;">number patients remained:</label>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4"></div>
-</div>
 
 {% endblock %}
 
 {% block js %}
-<script>
-    layui.use([], function () {
-        var $ = layui.jquery;
-        //演示动画开始
-        $('.site-doc-icon .layui-anim').on('click', function () {
-            var othis = $(this), anim = othis.data('anim');
+    <script>
+        layui.use([], function () {
+            var $ = layui.jquery;
+            //演示动画开始
+            $('.site-doc-icon .layui-anim').on('click', function () {
+                var othis = $(this), anim = othis.data('anim');
 
-            //停止循环
-            if (othis.hasClass('layui-anim-loop')) {
-                
-                return othis.removeClass(anim);
-            }
-            othis.removeClass(anim);
-            setTimeout(function () {
-                othis.addClass(anim);
-            });
-            //恢复渐隐
-            if (anim === 'layui-anim-fadeout') {
+
+                if (othis.hasClass('layui-anim-loop')) {
+
+                    return othis.removeClass(anim);
+                }
+                othis.removeClass(anim);
                 setTimeout(function () {
-                    othis.removeClass(anim);
-                }, 1300);
-            }
-        });
-        //演示动画结束
-    })
-</script>
+                    othis.addClass(anim);
+                });
+
+                if (anim === 'layui-anim-fadeout') {
+                    setTimeout(function () {
+                        othis.removeClass(anim);
+                    }, 1300);
+                }
+            });
+
+        })
+        let waiting = 0
+        updateWaitingInfo = () => {
+            axios.get("/getWaitingInfo/{{ appoint_id }}").then((res) => {
+                    if (res) {
+                        $("#text").html("number patients remained:" + res.data.queue_length)
+                        if (res.data.queue_length === 0)
+                            waiting = 1
+                        console.log(res)
+                    }
+                }
+            ).catch((error) => {
+                console.log(error)
+            })
+        }
+
+        updateWaitingInfo()
+        setInterval(updateWaitingInfo, 1000)
+
+        checkPsAvailable = () => {
+            axios.get("/checkPrescription/{{ appoint_id }}").then((res) => {
+                if (res && res.data.success) {
+                    let data = res.data
+                    window.location = "/patient_checkout/{{ appoint_id }}";
+                }
+            })
+
+        }
+        setInterval(checkPsAvailable, 1000)
+
+
+    </script>
 {% endblock %}

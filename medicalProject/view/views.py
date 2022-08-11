@@ -5,7 +5,7 @@ def index(request):
     return render(request, "index.html", {})
 
 
-# No backend authenticated the credentials
+
 
 
 def register(request):

@@ -2,53 +2,111 @@
 
 {% block header %}
 
-<title>login</title>
+    <title>login</title>
 
 {% endblock %}
 
 {% block title %}
-Medical management system
+    Medical management system
 {% endblock %}
 {% load static %}
 
 {% block content %}
-<div class="row">
-    <!-- <h1 style="text-align: center;">User Login</h1> -->
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <form class="layui-form" method="post" action="login/">
-            {% csrf_token %}
-            <div class="layui-form-item">
-                <label class="control-label" for="account">Account</label>
-                <input class="layui-input" id="account" name="account" type="text" required/>
-{#                <input type="radio" name="role" value="0" title="Administrator">#}
-{#                <input type="radio" name="role" value="1" title="Doctor" checked>#}
-{#                <input type="radio" name="role" value="2" title="Patient">#}
-            </div>
-            <div class="layui-form-item">
-                <label class="control-label" for="password">Password</label>
-                <input class="layui-input" id="password" name="password" type="password" required/>
-            </div>
-            <div class="layui-form-item">
-                <!-- <button class="btn" type="button">Registered</button>
-                <button class="btn" type="button" >Login</button> -->
-                <a href="/register"><button class="layui-btn layui-btn-radius" type="button">Registered</button></a>
-{#                <a href="/login"><button class="layui-btn layui-btn-radius" type="button">Login</button></a>#}
-                <input class="layui-btn layui-btn-radius" type="submit" value="Login" />
-            </div>
-        </form>
-    </div>
 
-    <a href="/patient_checkout" class="layui-btn layui-btn-radius">DEBUG</a>
-</div>
+    <div class="row">
+        <!-- <h1 style="text-align: center;">User Login</h1> -->
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form class="layui-form" method="post" action="login">
+                {% csrf_token %}
+                <div class="layui-form-item">
+                    <label class="control-label" for="account" >Account</label>
+                    <input class="layui-input" placeholder="Please enter your email address" id="account" name="account" type="text" required/>
+                    {#                <input type="radio" name="role" value="0" title="Administrator">#}
+                    {#                <input type="radio" name="role" value="1" title="Doctor" checked>#}
+                    {#                <input type="radio" name="role" value="2" title="Patient">#}
+                </div>
+                <div class="layui-form-item">
+                    <div style="float: left; width: 40%" ><input placeholder="please enter the verification code" class="layui-input" id="verification_code" name="verification_code" type="text" required/></div>
+                    <div style="margin-left: 20px; float: left; width: 40%"  ><button  onclick="Resend_verification_code()" class="control-label"  id="hqyzm"  style=" height: 37px; width: 100% ;font-size: 20px;background-color: #0dcaf0">get code</button></div>
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="control-label" for="password">Password</label>
+                    <input class="layui-input" placeholder="enter your PIN" id="password" name="password" type="password" required/>
+                </div>
+                {% if login_fail %}
+                    <div id="login-fail" title="Login failed">
+                        <p style="color: red; padding: 10px">Login failed</p>
+                    </div>
+                {% endif %}
+                {% if login_yzm %}
+                    <div id="login_yzm" title="login_yzm">
+                        <p style="color: red; padding: 10px">Login The verification code has expired or is incorrect</p>
+                    </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <!-- <button class="btn" type="button">Registered</button>
+                    <button class="btn" type="button" >Login</button> -->
+                    <a href="/register">
+                        <button class="layui-btn layui-btn-radius" type="button">Registered</button>
+                    </a>
+                    {#                <a href="/login"><button class="layui-btn layui-btn-radius" type="button">Login</button></a>#}
+                    <input class="layui-btn layui-btn-radius" type="submit" value="Login"/>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}
 
 {% block js %}
 
-<script>
-    layui.use('form', function () {
-        var form = layui.form;
-    });
-</script>
+    <script>
+
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+
+        $(document).ready(function () {
+            $(function () {
+                $("#login-fail").dialog({
+                    modal: true,
+                    closeOnEscape: false,
+                    dialogClass: "no-close",
+                    resizable: false,
+                    draggable: false,
+                    width: 600,
+                    buttons: [
+                        {
+                            text: "OK",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
+                });
+            });
+        });
+        Resend_verification_code = () => {
+            if ($("#hqyzm").html()=='get code'){
+                $("#hqyzm").html("The verification code has been sent")
+                account = $("#account").val()
+                axios.get("/getlogin/email?account="+account).then((res) => {
+                        if (res) {
+                            console.log(res)
+                            {#if (res.data.queue_length === 0)#}
+                            {#    #}
+                            {#    console.log(res)#}
+                        }
+                    }
+                ).catch((error) => {
+                    console.log(error)
+                })
+            }else{
+                alert('Verification code has been sent, do not need to obtain again!!')
+            }
+        }
+        // https://stackoverflow.com/questions/44551791/how-to-add-alert-popup-boxes-in-django
+    </script>
 {% endblock %}

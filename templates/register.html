@@ -7,12 +7,38 @@
 {% endblock %}
 
 {% block title %}
-Registerd
+Registered
 {% endblock %}
 {% load static %}
 
 {% block content %}
+<style>
+a[class="button-selectimg"] {
+                color: #00A2D4;
+                padding: 4px 6px;
+                border: 1px dashed #00A2D4;
+                border-radius: 2px;
+                text-decoration: none;
+            }
 
+            input[id="avatval"] {
+                padding: 3px 6px;
+                padding-left: 10px;
+                border: 1px solid #E7EAEC;
+                width: 230px;
+                height: 25px;
+                line-height: 25px;
+                border-left: 3px solid #3FB7EB;
+                background: #FAFAFB;
+                border-radius: 2px;
+            }
+
+            input[type='file'] {
+                border: 0px;
+                display: none;
+            }
+
+</style>
 <div class="row">
     <div class="col-md-4"></div>
     <div class="col-md-4">
@@ -20,11 +46,11 @@ Registerd
             {% csrf_token %}
             <div class="control-group">
                 <label class="control-label" for="account">Account</label>
-                <input class="form-control" id="account" name="account" type="text" />
+                <input placeholder="Please enter your email address"  class="form-control" id="account" name="account" type="text" />
             </div>
             <div class="control-group">
                 <label class="control-label" for="name">Name</label>
-                <input class="form-control" id="name" name="name" type="text" />
+                <input placeholder="Please input user name"  class="form-control" id="name" name="name" type="text" />
             </div>
             <div class="control-group">
                 <input type="radio" name="sex" value="0" title="Male">
@@ -32,8 +58,12 @@ Registerd
             </div>
             <div class="control-group">
                 <label class="control-label" for="password">Password</label>
-                <input class="form-control" id="password" name="password" type="password"/>
+                <input placeholder="Please enter a password containing numbers, letters or special symbols" class="form-control" id="password" name="password" oninput="myFunction()" type="password"/>
             </div>
+            <div class="control-group" id="mm" >
+
+            </div>
+
 {#            <div class="control-group">#}
 {#                <label class="control-label" for="Registration">Registration type:</label>#}
 {#                <a href="/doctorHome"><button class="layui-btn layui-btn-radius" type="button">Doctor</button></a>#}
@@ -43,7 +73,11 @@ Registerd
 
             <div class="control-group">
                 <label class="control-label" for="avatar">Avatar</label>
-                <input type="file" class="form-control-file" name="avatar" id="avatar">
+{#              <input type="file" class="form-control-file" name="avatar" id="avatar">#}
+                <br/>
+                <input type="text" id="avatval" placeholder="please choose folder···" readonly="readonly" />
+                <input type="file" name="avatar" id="avatar"/>
+                <a href="javascript:void(0);" class="button-selectimg" id="avatsel1">Select File</a>
             </div>
 
             <div class="control-group">
@@ -70,5 +104,67 @@ Registerd
     layui.use('form', function () {
         var form = layui.form;
     });
+</script>
+<script>
+{#是否包含数字#}
+function containsNumber(str) {
+    let reg=/\d/;
+    return reg.test(str);
+}
+{#是否包含字母#}
+function containsLetter(str) {
+    for (var i in str) {
+        var asc = str.charCodeAt(i);
+        if ((asc >= 65 && asc <= 90 || asc >= 97 && asc <= 122)) {
+            return true;
+        }
+    }
+    return false;
+}
+function chack_name(str){
+　　var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？ ]");
+　　if (pattern.test(str)){
+　　　　return true;
+　　}
+　　return false;
+}
+function myFunction() {
+{#纯数字 弱#}
+{#字母+数字 中级#}
+{#字母+数字+特殊字符  高级#}
+
+    password = document.getElementById("password").value
+    if (containsNumber(password)) {
+        document.getElementById("mm").innerHTML = "<p style='color: red'>Password is weak</p>"
+        if (containsLetter(password)) {
+            document.getElementById("mm").innerHTML = "<p style='color: blue'>Password intermediate</p>"
+            if (chack_name(password)){
+                document.getElementById("mm").innerHTML = "<p style='color: green'>Password advanced</p>"
+            }else{
+                 document.getElementById("mm").innerHTML = "<p style='color: blue'>Password intermediate</p>"
+            }
+        }else{
+            document.getElementById("mm").innerHTML = "<p style='color: red'>Password is weak</p>"
+        }
+    }else{
+        document.getElementById("mm").innerHTML = ""
+    }
+
+
+
+
+
+}
+ $(function(){
+            $("#avatsel1").click(function(){
+                $("input[type='file']").trigger('click');
+            });
+            $("#avatval").click(function(){
+                $("input[type='file']").trigger('click');
+            });
+            $("input[type='file']").change(function(){
+                $("#avatval").val($(this).val());
+            });
+       });
 </script>
 {% endblock js %}

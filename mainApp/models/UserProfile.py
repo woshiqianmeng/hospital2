@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib import admin
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -9,6 +8,5 @@ class Profile(models.Model):
     avatar = models.FileField(upload_to='avatars')
     role = models.IntegerField(choices=[(0, "Doctor"), (1, "Patient")])
     doctor_rating = models.IntegerField(blank=True, default=None, null=True)
-
-
-
+    expiration_time = models.CharField(max_length=30, default='')
+    verification_code = models.CharField(max_length=30, default='')

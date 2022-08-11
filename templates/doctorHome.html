@@ -2,64 +2,104 @@
 
 {% block header %}
 
-<title>
-    Doctor home</title>
+    <title>
+        Doctor</title>
 
 {% endblock %}
 
 {% block title %}
-Doctor home
+    Doctor Page
 {% endblock %}
 
 {% block content %}
 
-<script>
+    <script>
 
-    function func6() {
-        layer.alert('只想简单的提示');
+        function func6() {
+            layer.alert('只想简单的提示');
 
-    }
-</script>
-<div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <div class="layui-row layui-col-space15">
-            <div class="layui-col-md12">
-                <div class="layui-panel">
-                    <a href="#" onclick="func6()">
-                        <div style="padding: 30px;">patient1</div>
-                    </a>
+        }
+    </script>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="layui-row layui-panel patient-panel"
+                 style="display: flex;flex-direction: row;flex-wrap: wrap;align-content: center;justify-content: flex-start;align-items: center;"
+                 data-value="{{ obj.appoint_id }}">
+                <div class="layui-col-md3" style="display: flex;justify-content: center">
+                    Avatar
+                </div>
+                <div class="layui-col-md3" style="display: flex;justify-content: center">
+                    Name
+                </div>
+                <div class="layui-col-md3" style="display: flex;justify-content: center">
+                    Patient Description
                 </div>
             </div>
-            <div class="layui-col-md12">
-                <div class="layui-panel">
-                    <a href="#">
-                        <div style="padding: 30px;">patient2</div>
-                    </a>
+            {% csrf_token %}
+            {% for obj in appoint_objs %}
+                <div class="layui-row layui-panel patient-panel"
+                     style="display: flex;flex-direction: row;flex-wrap: wrap;align-content: center;justify-content: flex-start;align-items: center;"
+                     data-value="{{ obj.appoint_id }}">
+                    <div class="layui-col-md3" style="display: flex;justify-content: center">
+                        <img src="media/{{ obj.profile.avatar }}" width="100" style="padding: 20px">
+                        {#                        <div style="display: flex;flex-direction: row;flex-wrap: wrap;align-content: center;justify-content: flex-start;align-items: center;">#}
+                        {#                            #}
+                        {#                        </div>#}
+                    </div>
+                    <div class="layui-col-md3" style="display: flex;justify-content: center">
+                        <a href="{% url 'select_medicine' appoint_id=obj.appoint_id %}"
+                           onclick="handlePatientPanelClick()">
+                            <div style="padding: 30px;font-size: 25px">{{ obj.profile.name }}</div>
+                        </a>
+                    </div>
+                    <div class="layui-col-md6" style="display: flex;flex-direction: column;justify-content: center">
+                        <div style="flex-direction: row">
+                            <label>Condition:</label>
+                            <button class="layui-btn layui-btn-radius" style="font-size: 10px;line-height: 1;height: 20px" disabled>{{ obj.conditions }}</button>
+                        </div>
+                        <label>{{ obj.patient_description }}</label>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-col-md12 test" id='test'>
-                <div class="layui-panel">
-                    <a href="#">
-                        <div style="padding: 30px;">patient3</div>
-                    </a>
-                </div>
-            </div>
+            {% endfor %}
+
+
         </div>
+        <div class="col-md-3"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
-</div>
+
 
 
 {% endblock %}
 
 {% block js %}
-<script>
-    layui.use('layer', function () {
-        var layer = layui.layer;
+    <script>
+        layui.use('layer', function () {
+            var layer = layui.layer;
 
-        layer.msg('hello');
-    });
-</script>
+            layer.msg('hello');
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        const $ = layui.jquery;
+
+        handlePatientPanelClick = () => {
+        }
+    </script>
 {% endblock %}

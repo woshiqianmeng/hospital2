@@ -1,0 +1,115 @@
+{% extends '_base.html' %}
+
+{% block header %}
+    <title>Select Medicine</title>
+{% endblock %}
+
+{% block title %}
+    Select Medicine
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="layui-container">
+
+        <div class="layui-row">
+            <label>Condition:</label>
+            <button class="layui-btn layui-btn-radius" disabled>{{ conditions }}</button>
+        </div>
+        <label>Patient Description:</label>
+        <textarea contenteditable="false" required lay-verify="required" placeholder="请输入"
+                  class="layui-textarea">{{ description }}</textarea>
+    </div>
+    <div class="layui-row" style="display: flex;flex-direction: row;justify-content: center;padding: 20px">
+        <input type="text" id="searchContent" oninput="search()" style="font-size: 20px;width: 700px">
+        <button class="layui-btn layui-btn-radius" id="search" onclick=search()>Search</button>
+    </div>
+    <form class="layui-form" method="post" action="{% url "select_medicine" appoint_id=appoint_id %}">
+        {% csrf_token %}
+
+        <div class="layui-container">
+            <div class="layui-row layui-panel medicine-panel" style="display: flex">
+                <div class="layui-col-md1 grid-cell">
+
+                </div>
+                <div class="layui-col-md4 grid-cell">
+                    <div> Name</div>
+                </div>
+                <div class="layui-col-md4 grid-cell"> Price</div>
+                <div class="layui-col-md3 grid-cell">
+                    Num
+                </div>
+            </div>
+            {% for medicine in medicines %}
+                <li class="medicine-list">
+                    <div class="layui-row layui-panel medicine-panel"
+                     style="display: flex;justify-content: center;">
+                    <div class="layui-col-md3 grid-cell" style="display: flex;justify-content: center">
+                        <img src="{{ medicine.img.url }}" style="height: 100px;width: 100px">
+                    </div>
+                    <div class="layui-col-md4 grid-cell" style="display: flex;justify-content: center">
+                        <div class="medicine_name">{{ medicine.name }}</div>
+                    </div>
+                    <div class="layui-col-md4 grid-cell"
+                         style="display: flex;justify-content: center"> {{ medicine.price }} </div>
+                    <div class="layui-col-md3 grid-cell" style="display: flex;justify-content: center">
+                        <input type="text" name="num" value="0" style="text-align:center;width: 50px">
+                    </div>
+                    <input type="text" name="med_id" value="{{ medicine.id }}" hidden/>
+                </div>
+                </li>
+
+            {% endfor %}
+        </div>
+        <input type="text" name="appointment_id" value="{{ appoint_id }}" hidden/>
+        <div class="layui-row grid-cell">
+            <input class="layui-btn layui-btn-radius" type="submit" value="Submit"
+                   style="justify-content: center;align-items: center;width:fit-content"/>
+        </div>
+    </form>
+
+    <style>
+        .grid-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+
+        function search() {
+            const searchContent = $("#searchContent").val();
+            console.log(searchContent)
+            const searchLen = $(".medicine-list").length;
+            if (searchContent === "") {
+                for (let i = 0; i < searchLen; i++) {
+                    $(".medicine-list")[i].style.display = '';
+                }
+                return;
+            }
+
+            console.log(searchLen)
+            for (let i = 0; i < searchLen; i++) {
+                let searchText = $(".medicine_name")[i].innerText;
+                console.log(searchText)
+                if (searchText.match(searchContent)) {
+                    $(".medicine-list")[i].style.display = '';
+                } else {
+                    $(".medicine-list")[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+{% endblock %}

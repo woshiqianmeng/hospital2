@@ -86,7 +86,7 @@ Select a Doctor page
     let currSelectedDocId = -1
     const $ = layui.jquery;
 
-    // 单选逻辑
+
     $('.layui-panel').on('click', function () {
         let check = $(this).attr("check")
         currSelectedDocId = this.getAttribute("data-value")
@@ -106,13 +106,17 @@ Select a Doctor page
 
     let submit = () => {
         if (currSelectedDocId !== -1) {
-            axios.post('/doctor/', {
+            axios.post('/doctor', {
                 selectedDoc: currSelectedDocId,
             },{
                  headers: {'X-CSRFToken': csrftoken},
             })
                 .then(function (response) {
-                    console.log(response);
+                    console.log(response)
+                    let res = response.data
+                    if (res.success){
+                        window.location = "/wait/" + res.appoint_id;
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
